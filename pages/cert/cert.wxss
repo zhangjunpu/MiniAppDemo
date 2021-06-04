@@ -1,0 +1,72 @@
+/* pages/cert/cert.wxss */
+.container {}
+
+.container-name {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 10;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.name-bg {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: -1;
+}
+
+.name-input {
+	width: 255px;
+	height: 52px;
+	border-radius: 5px;
+	border: 1px solid #C5CCD1;
+	color: #CFA361;
+	font-size: 27px;
+	line-height: 52px;
+	background-color: transparent;
+	padding: 0 10px;
+	outline: none;
+	text-align: center;
+}
+
+.btn-cert {
+	margin: 168rpx 0;
+}
+
+.container-canvas {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.canvas-view {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.container-button {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+.btn-save {
+	width: 45% !important;
+	margin: 0 0 25rpx !important;
+}

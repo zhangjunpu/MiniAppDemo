@@ -1,0 +1,36 @@
+<!--pages/cert/cert.wxml-->
+<view class="container">
+	<view class="container-name" hidden="{{isShow}}">
+		<image class="name-bg" src="/assets/images/ic_cert_bg.jpg" />
+		<input class="name-input" type="text" bindinput="handleInputName"/>
+		<button class="btn btn-cert" bindtap="handleGetCert">获取你的荣誉证书</button>
+	</view>
+	
+	<view class="container-canvas">
+		<view class="canvas-view">
+			<canvas 
+				type="2d" 
+				id="canvas" 
+				style="width:{{canvasWidth}}px; height:{{canvasHeight}}px">
+			</canvas>
+		</view>
+
+		<view class="container-button">
+			<button 
+				class="btn btn-save" 
+				loading="{{isLoading}}"
+				disabled="{{isLoading}}"
+				bindtap="handleBackInput">
+				返回
+			</button>
+
+			<button 
+				class="btn btn-save" 
+				loading="{{isLoading}}"
+				disabled="{{isLoading}}"
+				bindtap="handleSaveImage">
+				保存图片
+			</button>
+		</view>
+	</view>
+</view>

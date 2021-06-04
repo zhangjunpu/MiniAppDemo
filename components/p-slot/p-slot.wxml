@@ -1,0 +1,8 @@
+<!--components/p-slot/p-slot.wxml-->
+<view>
+	<image src="{{imagesrc}}"></image>
+	<slot name="slot1"/>
+	<view>middle</view>
+	<slot name="slot2"/>
+	<view>footer</view>
+</view>

@@ -1,0 +1,7 @@
+/* pages/index/index.wxss */
+navigator {
+	text-align: center;
+	background-color: #eee;
+	margin: 10rpx 0;
+	padding: 10rpx;
+}

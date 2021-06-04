@@ -1,0 +1,19 @@
+{
+	"pages": [
+		"pages/chart/chart",
+		"pages/index/index",
+		"pages/home/home",
+		"pages/danmaku/danmaku",
+		"pages/cert/cert"
+	],
+	"window": {
+		"navigationBarBackgroundColor": "#fff",
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "小程序",
+		"backgroundColor": "#fff",
+		"backgroundTextStyle": "light",
+		"enablePullDownRefresh": false
+	},
+	"style": "v2",
+	"sitemapLocation": "sitemap.json"
+}

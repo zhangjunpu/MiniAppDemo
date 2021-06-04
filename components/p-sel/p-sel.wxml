@@ -1,0 +1,2 @@
+<!--components/p-sel/p-sel.wxml-->
+<view>{{count}}</view>

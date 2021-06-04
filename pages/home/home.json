@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "p-cpn":"/components/p-cpn/p-cpn",
+    "tab-bar":"/components/tab-bar/tab-bar",
+    "p-sel":"/components/p-sel/p-sel",
+    "p-slot":"/components/p-slot/p-slot"
+  }
+}

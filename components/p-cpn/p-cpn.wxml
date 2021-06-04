@@ -1,0 +1,6 @@
+<!--components/p-cpn/p-cpn.wxml-->
+
+<view class="container">
+	<view class="title titleclass">{{title}}</view>
+	<view class="desc descclass">{{desc}}</view>
+</view>

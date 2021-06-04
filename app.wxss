@@ -1,0 +1,15 @@
+.btn {
+	width: auto !important;
+	padding: 20rpx 30rpx;
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+	background-color: #CFA361;
+	border-radius: 8rpx;
+	color: #fff;
+	font-size: 36rpx;
+}
+.btn:active {
+	opacity: .8;
+}

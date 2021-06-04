@@ -1,0 +1,7 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+	<navigator url="/pages/home/home">test</navigator>
+	<navigator url="/pages/danmaku/danmaku">弹幕</navigator>
+	<navigator url="/pages/cert/cert">证书</navigator>
+	<navigator url="/pages/chart/chart">图表</navigator>
+</view>

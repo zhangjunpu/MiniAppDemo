@@ -1,0 +1,11 @@
+/* pages/chart/chart.wxss */
+page {
+	background: #F6F6F6;
+}
+.canvas-view {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #fff;
+	margin: 32rpx;
+}

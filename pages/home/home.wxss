@@ -1,0 +1,15 @@
+/* pages/home.wxss */
+.title {
+  color: red;
+  font-size: 50rpx;
+}
+
+.button {
+  color: blue;
+  font-size: 50rpx;
+}
+
+.titleRed {
+  color: aquamarine;
+  background: bisque;
+}

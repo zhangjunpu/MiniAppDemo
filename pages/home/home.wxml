@@ -1,0 +1,21 @@
+<!--pages/home.wxml-->
+<view>Test</view>
+<text class="title">Hello World</text>
+<button size="mini" class="button">test</button>
+
+<!-- 1. 使用Component -->
+<p-cpn title="哈哈哈" desc="哈哈哈哈哈哈哈哈哈哈" titleclass="title" />
+<p-cpn titleclass="titleRed" />
+
+<!-- 2. tab-bar 自定义组件 -->
+<tab-bar bind:tabtap="handleTabTap" titles="{{['首页','分类','关于']}}" />
+
+<!-- 3. 外部修改组件内部数据 -->
+<button size="mini" bind:tap="handleComponentCount">组件数字++</button>
+<p-sel id="p-sel" />
+
+<!-- 4. slot -->
+<p-slot imagesrc="https://imgm.gmw.cn/attachement/jpg/site215/20200417/7026588152258541653.jpg">
+	<slider slot="slot1" value="50" max="200" />
+	<button size="mini" slot="slot2">哈哈哈</button>
+</p-slot>
