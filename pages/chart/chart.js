@@ -1,5 +1,7 @@
 // pages/chart/chart.js
 import { selectQuery } from "../../utils/wx-helper";
+import { createImage } from "../../utils/mark-utils";
+import { loge } from "../../utils/log";
 
 const PADDING_V = 30; // 图标区域上下留白
 const PADDING_H = 20; // 图标区域左右留白
@@ -16,38 +18,59 @@ Page({
 		canvasWidth: 0,
 		canvasHeight: 0,
 		list: [{
+			"dayStr": "上周三",
+			"dateList": [{
+				"startDate": 1622606942000,
+				"endDate": 1622649599999
+			}]
+		}, {
 			"dayStr": "上周四",
 			"dateList": [{
-				"startDate": 1620280800000,
-				"endDate": 1620288000000
+				"startDate": 1622685282000,
+				"endDate": 1622735999999
 			}]
 		}, {
 			"dayStr": "上周五",
 			"dateList": [{
-				"startDate": 1620289800000,
-				"endDate": 1620290340000
+				"startDate": 1622777319000,
+				"endDate": 1622822399999
 			}]
 		}, {
 			"dayStr": "上周六",
-			"dateList": []
+			"dateList": [{
+				"startDate": 1622856945000,
+				"endDate": 1622908799999
+			}]
 		}, {
 			"dayStr": "上周日",
 			"dateList": []
 		}, {
 			"dayStr": "周一",
 			"dateList": [{
-				"startDate": 1620293940000,
-				"endDate": 1620301140000
+				"startDate": 1623035656000,
+				"endDate": 1623036107000
 			}, {
-				"startDate": 1620304740000,
-				"endDate": 1620308340000
-			},]
+				"startDate": 1623036124000,
+				"endDate": 1623055405000
+			}, {
+				"startDate": 1623056477000,
+				"endDate": 1623081599999
+			}]
 		}, {
 			"dayStr": "周二",
-			"dateList": []
-		}, {
-			"dayStr": "周三",
-			"dateList": []
+			"dateList": [{
+				"startDate": 1623116061000,
+				"endDate": 1623116062000
+			}, {
+				"startDate": 1623117388000,
+				"endDate": 1623135639000
+			}, {
+				"startDate": 1623139813000,
+				"endDate": 1623141464000
+			}, {
+				"startDate": 1623141472000,
+				"endDate": 1623149152000
+			}]
 		}],
 	},
 
@@ -65,20 +88,56 @@ Page({
 		const canvas = res[0].node;
 		const ctx = canvas.getContext('2d');
 		const { width } = res[1];
-		const height = width * 0.58;
-		this.canvas = { canvas, ctx, width, height };
 
-		this.setData({
-			canvasWidth: width,
-			canvasHeight: height,
-		});
-		const dpr = wx.getSystemInfoSync().pixelRatio
-		canvas.width = width * dpr;
-		canvas.height = height * dpr;
-		ctx.scale(dpr, dpr);
+		const resizeCanvas = (width, height) => {
+			this.setData({
+				canvasWidth: width,
+				canvasHeight: height,
+			});
+			const dpr = wx.getSystemInfoSync().pixelRatio;
+			canvas.width = width * dpr;
+			canvas.height = height * dpr;
+			ctx.scale(dpr, dpr);
+		}
 
-		this._initChart();
-		this._render();
+		const renderDelay = (flag, img, w) => {
+			setTimeout(() => {
+				if (flag)
+					this._render();
+				else
+					this._renderEmptyView(img, w);
+			}, 100);
+		}
+
+		if (true) {
+			const height = width * 0.58;
+			this.canvas = { canvas, ctx, width, height };
+			resizeCanvas(width, height);
+			this._initChart();
+			renderDelay(true);
+		} else {
+			createImage(canvas, "/assets/images/none.png").then(img => {
+				const { width: imgWidth, height: imgHeight } = img;
+				const height = imgWidth > width ? (width / imgWidth) * imgHeight : imgHeight;
+				const w = Math.min(imgWidth, width);
+				this.canvas = { canvas, ctx, width, height };
+				console.log("img", imgWidth, imgHeight);
+				resizeCanvas(width, height);
+				renderDelay(false, img, w);
+			}).catch(loge);
+		}
+	},
+
+	/**
+	 * 渲染空数据
+	 */
+	_renderEmptyView(img, w) {
+		const { canvas, ctx, width, height } = this.canvas;
+		// 清除画布
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		// 画空数据图片
+		const x = (width - w) / 2;
+		ctx.drawImage(img, x, 0, width, height);
 	},
 
 	/**
@@ -98,30 +157,30 @@ Page({
 			if (dateList) {
 				dateList.forEach((it) => {
 					const { startDate, endDate } = it;
+					const start = new Date(startDate);
+					const end = new Date(endDate);
+					const startHours = start.getHours();
+					const endHours = end.getMinutes() > 0 ? end.getHours() + 1 : end.getHours();
 					if (min === -1 && max === -1) {
-						min = startDate;
-						max = endDate;
+						min = startHours;
+						max = endHours;
 					} else {
-						if (startDate < min) min = startDate;
-						if (endDate > max) max = endDate;
+						if (startHours < min) min = startHours;
+						if (endHours > max) max = endHours;
 					}
 				});
 			}
 		});
-		const minDate = new Date(min);
-		const maxDate = new Date(max);
-		let minY = minDate.getHours();
-		let maxY = maxDate.getMinutes() > 0 ? maxDate.getHours() + 1 : maxDate.getHours();
-		const lineCount = maxY - minY;
-		console.log(minY, maxY, lineCount);
+		const lineCount = max - min;
+		console.log(min, max, lineCount);
 
 		let arr = [];
 		if (lineCount > 6) {
 			const offset = Math.ceil(lineCount / 6);
 			for (let i = 0; i <= 6; i++) {
-				const curCount = minY + i * offset;
-				if (curCount > maxY) break;
+				const curCount = min + i * offset;
 				arr[i] = curCount;
+				if (curCount >= max) break;
 			}
 		} else {
 			for (let i = 0; i <= lineCount; i++) {
@@ -136,40 +195,26 @@ Page({
 				arr = arr.map(item => item - offset);
 			}
 		}
-
 		console.log(arr);
-		minY = arr[0];
-		maxY = arr[arr.length - 1];
-		this._clearDateToHours(minDate, minY);
-		this._clearDateToHours(maxDate, maxY);
-		console.log({ minDate, maxDate });
-		const minTimes = minDate.getTime();
-		const maxTimes = maxDate.getTime();
+		min = arr[0];
+		max = arr[arr.length - 1];
 		const lineSpacing = chartHeight / (arr.length - 1);
 		const itemSpacing = (chartWidth - ITEM_WIDTH * list.length) / list.length;
-		this.chartData = { chartWidth, chartHeight, minTimes, maxTimes, lineSpacing, itemSpacing, arr };
-	},
-
-	/**
-	 * 设定指定时间戳到指定小时
-	 */
-	_clearDateToHours(date, hours) {
-		date.setHours(hours);
-		date.setMinutes(0);
-		date.setSeconds(0);
-		date.setMilliseconds(0);
+		this.chartData = { chartWidth, chartHeight, min, max, lineSpacing, itemSpacing, arr };
+		this.tempDate = new Date();
 	},
 
 	/**
 	 * 渲染
 	 */
 	_render() {
-		const { ctx, width, height } = this.canvas;
-		const { chartWidth, chartHeight, minTimes, maxTimes, lineSpacing, itemSpacing, arr } = this.chartData;
+		const { canvas, ctx, width, height } = this.canvas;
 		const { list } = this.data;
-		console.log(this.chartData);
+		const { chartWidth, chartHeight, min, max, lineSpacing, itemSpacing, arr } = this.chartData;
+		const tempDate = this.tempDate;
+		console.log("_render", this.chartData);
 		// 清除画布
-		ctx.clearRect(0, 0, width, height);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		// 画线
 		arr.forEach((item, i) => {
@@ -211,18 +256,55 @@ Page({
 			// 画时间条
 			dateList.forEach((it, i) => {
 				const { startDate, endDate } = it;
+				tempDate.setTime(startDate);
+				this._clearDateToHours(tempDate, min);
+				const minTimes = tempDate.getTime();
+				this._clearDateToHours(tempDate, max);
+				const maxTimes = tempDate.getTime();
 				const allTimes = maxTimes - minTimes;
 				const h = (endDate - startDate) / allTimes * chartHeight;
 				const space = (startDate - minTimes) / allTimes * chartHeight;
 				const l = itemCenterX - ITEM_WIDTH / 2;
 				const t = b - space - h;
-
+				
 				ctx.fillStyle = COLOR_RECT;
 				ctx.rect(l, t, ITEM_WIDTH, h);
+				// this._drawRoundRect(l, t, l + ITEM_WIDTH, t + h, ITEM_WIDTH / 2, ctx);
 				ctx.fill();
 			});
 		});
+	},
 
+	/**
+	 * 设定指定时间戳到指定小时
+	 */
+	_clearDateToHours(date, hours) {
+		date.setHours(hours);
+		date.setMinutes(0);
+		date.setSeconds(0);
+		date.setMilliseconds(0);
+	},
+
+	/**
+	 * 画圆角矩形
+	 */
+	_drawRoundRect(left, top, right, bottom, radius, ctx) {
+		const w = right - left;
+		const h = bottom - top;
+		const r = Math.min(radius, Math.min(w / 2, h / 2));
+		console.log("origin", left, top, right, bottom, "radius", radius);
+		console.log(`${w}/${h}, r:${r}`);
+		ctx.beginPath();
+		ctx.moveTo(left, top + r);
+		ctx.arcTo(left, top, left + r, top, r);
+		ctx.lineTo(right - r, top);
+		ctx.arcTo(right, top, right, top + r, r);
+		ctx.lineTo(right, bottom - r);
+		ctx.arcTo(right, bottom, right - r, bottom, r);
+		ctx.lineTo(left + r, bottom);
+		ctx.arcTo(left, bottom, left, bottom - r, r);
+		ctx.closePath();
+		ctx.stroke();
 	},
 
 })

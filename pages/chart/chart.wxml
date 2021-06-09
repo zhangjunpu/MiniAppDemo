@@ -1,4 +1,8 @@
 <!--pages/chart/chart.wxml-->
 <view class="canvas-view">
-	<canvas type="2d" id="canvas" style="width:{{canvasWidth}}px; height:{{canvasHeight}}px"></canvas>
+	<canvas 
+		type="2d" 
+		id="canvas" 
+		style="width:{{canvasWidth}}px; height:{{canvasHeight}}px">
+	</canvas>
 </view>

@@ -28,7 +28,6 @@ Page({
 			const canvas = res[0].node;
 			const ctx = canvas.getContext('2d');
 			const { width, height } = res[1];
-			const h = width * 0.58;
 			this.canvas = { canvas, ctx, width, height };
 			// 加载图片
 			this._loadImage("/assets/images/ic_cert.jpg");
